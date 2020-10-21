@@ -16,7 +16,7 @@ public class UserService {
     public User createUser(User user){
         int id = userRepository.getLength() + 1;
         User newUser = User.builder().age(user.getAge()).id(id).avatar(user.getAvatar())
-                .name(user.getName()).build();
+                .name(user.getName()).description(user.getDescription()).build();
         userRepository.addUser(newUser);
         return newUser;
     }

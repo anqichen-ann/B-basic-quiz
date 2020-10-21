@@ -5,8 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Range;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 
 @Data
@@ -17,8 +20,8 @@ public class Education {
 
     private long userId;
 
-    @NotBlank(message = "年份不为空")
-    @Past(message = "输入历年年份")
+    @NotNull(message = "年份不为空")
+    @Max(2020)
     private long year;
 
     @NotBlank(message = "标题不为空")

@@ -1,9 +1,6 @@
 package com.example.demo.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
@@ -17,21 +14,20 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class User {
 
-    private int id;
+    private long id;
 
-    @NotBlank(message = "用户名不为空")
     @Length(min = 1, max = 128, message = "姓名长度范围为1-128 bytes")
     private String name;
 
-    @NotBlank(message = "年龄不为空")
-    @Range(min = 17, message = "年龄必须大于16")
-    private int age;
+    @NotNull(message = "年龄不为空")
+    @Min(17)
+    private long age;
 
     @NotBlank(message = "头像链接地址不为空")
     @Length(min = 8, max = 512, message = "链接长度范围为8-512 bytes")
     private String avatar;
 
-    @Length(min = 0, max = 1024, message = "个人信息长度范围为0-1024 bytes")
+    @Length(max = 1024, message = "个人信息长度范围为0-1024 bytes")
     private String description;
 
 }
