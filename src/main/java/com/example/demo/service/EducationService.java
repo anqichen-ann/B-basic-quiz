@@ -19,6 +19,8 @@ public class EducationService {
     }
 
     public List<Education> getEducationById(int id){
+        //TODO GTB-工程实践: - 可以直接 return，不需再定义一个 educationList
+        //TODO GTB-工程实践: - 尽量使用 equals()
         List<Education> educationList = educationRepository.findAll().stream().filter(edu -> edu.getUserId() == id).collect(Collectors.toList());
         return educationList;
     }

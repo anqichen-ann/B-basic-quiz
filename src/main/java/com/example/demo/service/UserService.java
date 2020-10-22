@@ -14,6 +14,7 @@ public class UserService {
     }
 
     public User createUser(User user){
+        //TODO GTB-完成度: - UserService.java:17 id 的生成逻辑最好不要跟当前 users 数量有这么强的耦合
         int id = userRepository.getLength() + 1;
         User newUser = User.builder().age(user.getAge()).id(id).avatar(user.getAvatar())
                 .name(user.getName()).description(user.getDescription()).build();

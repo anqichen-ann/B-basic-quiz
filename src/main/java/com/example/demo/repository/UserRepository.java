@@ -8,6 +8,7 @@ import java.util.List;
 
 @Configuration
 public class UserRepository {
+    //TODO GTB-工程实践: - UserRepository.java:11 可以是 final 的
     private List<User> userList = new ArrayList<>();
 
     public UserRepository(){

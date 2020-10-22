@@ -16,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 public class UserController {
+    //TODO GTB-工程实践: - 推荐使用构造函数注入
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -26,6 +27,7 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable("id") int id){
         User user = userRepository.getUserById(id);
+        //TODO GTB-知识点: - 这种情况下不需要用 ResponseEntity 再包一层。其它处同理。
         return ResponseEntity.ok(user);
     }
 
@@ -38,6 +40,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody @Valid User user){
         User newUser = userService.createUser(user);
+        //TODO GTB-知识点: - 可以使用 @ResponseStatus 来简化。
         return ResponseEntity.created(null).body(newUser);
     }
 
