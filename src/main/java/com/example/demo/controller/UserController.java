@@ -5,8 +5,7 @@ import com.example.demo.dto.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.EducationService;
 import com.example.demo.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -16,37 +15,35 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    //TODO GTB-工程实践: - 推荐使用构造函数注入
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    UserService userService;
-    @Autowired
-    EducationService educationService;
+    private final UserRepository userRepository;
+    private final UserService userService;
+    private final EducationService educationService;
+
+    public UserController(UserRepository userRepository, UserService userService, EducationService educationService) {
+        this.userRepository = userRepository;
+        this.userService = userService;
+        this.educationService = educationService;
+    }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable("id") int id){
-        User user = userRepository.getUserById(id);
-        //TODO GTB-知识点: - 这种情况下不需要用 ResponseEntity 再包一层。其它处同理。
-        return ResponseEntity.ok(user);
+    public User getUserById(@PathVariable("id") int id){
+        return userRepository.getUserById(id);
     }
 
     @GetMapping("/{id}/educations")
-    public ResponseEntity<List<Education>> getEducationById(@PathVariable("id") int id){
-        List<Education> educationList = educationService.getEducationById(id);
-        return ResponseEntity.ok(educationList);
+    public List<Education> getEducationById(@PathVariable("id") int id){
+        return educationService.getEducationById(id);
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody @Valid User user){
-        User newUser = userService.createUser(user);
-        //TODO GTB-知识点: - 可以使用 @ResponseStatus 来简化。
-        return ResponseEntity.created(null).body(newUser);
+    @ResponseStatus(HttpStatus.CREATED)
+    public User createUser(@RequestBody @Valid User user){
+        return userService.createUser(user);
     }
 
     @PostMapping("/{id}/educations")
-    public ResponseEntity<Education> addEducation(@PathVariable("id") int id, @RequestBody @Valid Education education){
-        Education newEducation = educationService.createEducation(id, education);
-        return ResponseEntity.created(null).body(newEducation);
+    @ResponseStatus(HttpStatus.CREATED)
+    public Education addEducation(@PathVariable("id") int id, @RequestBody @Valid Education education){
+        return educationService.createEducation(id, education);
     }
 }
