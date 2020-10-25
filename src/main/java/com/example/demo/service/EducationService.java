@@ -1,33 +1,48 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.Education;
+import com.example.demo.dto.User;
+import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.EducationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.demo.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 public class EducationService {
 
 
     private final EducationRepository educationRepository;
+    private final UserRepository userRepository;
 
-    public EducationService(EducationRepository educationRepository){
+    public EducationService(EducationRepository educationRepository, UserRepository userRepository){
         this.educationRepository = educationRepository;
+        this.userRepository = userRepository;
+        User user = userRepository.findById(1L).get();
+        Education edu1 =  Education.builder().user(user).year(2005).title("Secondary school specializing in artistic")
+                .description("Eos, explicabo, nam, tenetur et ab eius deserunt aspernatur ipsum ducimus quibusdam quis voluptatibus.")
+                .build();
+        educationRepository.save(edu1);
+        Education edu2 = Education.builder().user(user).year(2009).title("First level graduation in Graphic Design")
+                .description("Aspernatur, mollitia, quos maxime eius suscipit sed beatae ducimus quaerat quibusdam perferendis? Iusto, quibusdam asperiores unde repellat.")
+                .build();
+        educationRepository.save(edu2);
     }
 
-    public List<Education> getEducationById(int id){
-        //TODO GTB-工程实践: - 可以直接 return，不需再定义一个 educationList
-        //TODO GTB-工程实践: - 尽量使用 equals()
-        return educationRepository.findAll().stream().filter(edu -> edu.getUserId() == id).collect(Collectors.toList());
+    public List<Education> getEducationById(long id){
+        return educationRepository.findAllByUserId(id);
     }
 
-    public Education createEducation(int id, Education education){
-        Education newEducation = Education.builder().userId(id).year(education.getYear()).title(education.getTitle())
+    public Education createEducation(long id, Education education){
+        Optional<User> user = userRepository.findById(id);
+        if(!user.isPresent()){
+            throw new UserNotFoundException("用户不存在");
+        }
+        Education newEducation = Education.builder().user(user.get()).year(education.getYear()).title(education.getTitle())
                 .description(education.getDescription()).build();
-        educationRepository.addEducation(newEducation);
+        educationRepository.save(newEducation);
         return newEducation;
     }
 

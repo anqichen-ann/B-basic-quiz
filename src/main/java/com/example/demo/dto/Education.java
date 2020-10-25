@@ -1,12 +1,10 @@
 package com.example.demo.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
+import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -16,9 +14,13 @@ import javax.validation.constraints.Past;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Setter
+@Entity
+@Table(name = "educations")
 public class Education {
-
-    private long userId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
     @NotNull(message = "年份不为空")
     @Max(2020)
@@ -31,4 +33,8 @@ public class Education {
     @NotBlank(message = "描述不为空")
     @Length(min = 1, max = 4096, message = "经历描述长度范围为1-4096 bytes")
     private String description;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private User user;
 }

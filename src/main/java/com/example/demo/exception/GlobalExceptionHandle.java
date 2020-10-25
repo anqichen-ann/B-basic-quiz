@@ -23,4 +23,13 @@ public class GlobalExceptionHandle {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
+    @ExceptionHandler({UserNotFoundException.class})
+    public ResponseEntity userNotFoundHandle(UserNotFoundException ex){
+        String message = ex.getMessage();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+        String timeStamp = df.format(new Date());
+        Error error = new Error(timeStamp, HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), message);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
 }
