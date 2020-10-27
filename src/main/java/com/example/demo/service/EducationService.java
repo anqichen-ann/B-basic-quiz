@@ -2,7 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.Education;
 import com.example.demo.dto.User;
-import com.example.demo.exception.UserNotFoundException;
+import com.example.demo.exception.SourceNotFoundException;
 import com.example.demo.repository.EducationRepository;
 import com.example.demo.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -35,13 +35,17 @@ public class EducationService {
     }
 
     public List<Education> getEducationById(long id){
-        return educationRepository.findAllByUserId(id);
+        List<Education> educationList = educationRepository.findAllByUserId(id);
+        if (educationList.size() == 0) {
+            throw new SourceNotFoundException("Education not found");
+        }
+        return educationList;
     }
 
     public Education createEducation(long id, Education education){
         Optional<User> user = userRepository.findById(id);
         if(!user.isPresent()){
-            throw new UserNotFoundException("用户不存在");
+            throw new SourceNotFoundException("用户不存在");
         }
         Education newEducation = Education.builder().user(user.get()).year(education.getYear()).title(education.getTitle())
                 .description(education.getDescription()).build();

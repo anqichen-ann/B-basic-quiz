@@ -34,7 +34,7 @@ public class Education {
     @Length(min = 1, max = 4096, message = "经历描述长度范围为1-4096 bytes")
     private String description;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 }

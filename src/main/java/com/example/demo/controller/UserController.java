@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.Education;
 import com.example.demo.dto.User;
+import com.example.demo.exception.SourceNotFoundException;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.EducationService;
 import com.example.demo.service.UserService;
@@ -27,7 +28,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public User getUserById(@PathVariable("id") long id){
-        return userRepository.findById(id).get();
+        return userRepository.findById(id).orElseThrow(() -> new SourceNotFoundException("User not found"));
     }
 
     @GetMapping("/{id}/educations")
